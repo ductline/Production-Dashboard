@@ -152,7 +152,7 @@ footer p{margin:0 0 7px}
   <footer>
     <p><b>Square metres start blank on purpose.</b> Those figures live in the part-list and PO attachments, not in the email text. Fill each one from Arvind's part list and the totals across the top will add up.</p>
     <p>Everything you type is saved in this browser only. Opening the board on another device starts from the same job list with empty figures.</p>
-    <p>Job list is from the info@ductline.in mailbox as of 24 October 2026. Ask Claude to refresh it when new POs and approvals land.</p>
+    <p>Job list is from the info@ductline.in mailbox as of 26 October 2026. Ask Claude to refresh it when new POs and approvals land.</p>
   </footer>
 </div>
 
@@ -166,12 +166,12 @@ const STAGES = [
 ];
 const SK = Object.fromEntries(STAGES.map(s => [s.k, s]));
 
-// Refreshed from the mailbox on 24 Oct 2026. `since` = date that stage was last confirmed by email.
+// Refreshed from the mailbox on 26 Oct 2026. `since` = date that stage was last confirmed by email.
 const JOBS = [
   {id:'tap-candeur', stage:'ready', since:'2026-10-15', project:'Candeur Twins pressurisation', client:'TAP Engineering', ref:'PO 22978',
    detail:'PO 22978 received 15 Oct against the part list approved 13 Oct. Acknowledgment due in a day; we asked TAP to add 20G TDF price.', th:'1a13f22b927b2bed'},
-  {id:'toot-amararaja', stage:'ready', since:'2026-10-17', project:'Amararaja E-Positive, flat oval', client:'Tootmnetech', ref:'PO 356(115)/H414',
-   detail:'Amended PO received 17 Oct, acknowledgment requested. Design asked to change duct size and take flat oval from DL.No 5-8, duct 69A-92.', th:'1a12027ffba77474'},
+  {id:'toot-amararaja', stage:'ready', since:'2026-10-26', project:'Amararaja E-Positive, flat oval', client:'Tootmnetech', ref:'PO 356(115)/H414',
+   detail:'Coupling sizes for the E-Positive flat oval ducts sent 26 Oct; Tootmnetech want one sample coupling of each size at site urgently today.', th:'1a12027ffba77474'},
   {id:'tap-myscape', stage:'ready', since:'2026-10-14', project:'Myscape Stories, DG room', client:'TAP Engineering', ref:'—',
    detail:'Part layout and part list approved 14 Oct, dispatch to site at the earliest. Quote sent 15 Oct asking TAP to release PO.', th:'1a11af0a317a8c93'},
   {id:'tap-myscapeottomo', stage:'ready', since:'2026-10-22', project:'Myscape Ottomo Hyderabad, GI duct', client:'TAP Engineering', ref:'PO 22980',
@@ -256,7 +256,7 @@ const JOBS = [
   {id:'avsts-partlayout', stage:'draw', since:'2026-09-29', project:'Numbering drawing and part layout', client:'AVSTS', ref:'—',
    detail:'Drawing received 28 Sep and chased 29 Sep for the numbering drawing, part layout and quote. No reply sent yet.', th:'1a0ebc5666c50fd5'},
   {id:'cedar-fresh-air', stage:'approve', since:'2026-10-24', project:'Fresh air system, 20 SWG GI-TDF duct', client:'Cedar Act Solutions', ref:'—',
-   detail:'Cedar confirmed 270 sqm, 20 gauge only, on 24 Oct. Quote for 20G TDF duct sent back the same day.', th:'1a16da712bdb78d0'},
+   detail:'Cedar confirmed 270 sqm, 20 gauge only, on 24 Oct and we quoted the same day. Chased 26 Oct for an update on the drawing.', th:'1a16da712bdb78d0'},
   {id:'comf-mumbai', stage:'approve', since:'2026-10-22', project:'Mumbai duct package, tender RFQ', client:'Comfonomics', ref:'—',
    detail:'Techno-commercial offer and quote QT-000026 sent 22 Oct for the Mumbai tender RFQ, after Mohini\'s 21 Oct reminder.', th:'1a14993837398a00'},
   {id:'tap-honer-dg', stage:'ready', since:'2026-10-23', project:'Honer Signatis DG room hot air exhaust', client:'TAP Engineering', ref:'—',
@@ -278,12 +278,21 @@ const JOBS = [
   {id:'divineair-sinq', stage:'approve', since:'2026-10-24', project:'Sinq Hotel, round AC duct', client:'Divine Air', ref:'—',
    detail:'Sinq part list and quote sent 24 Oct, asking Divine Air to confirm production and release the PO.', th:'1a16907798c3d1e7'},
 
+  {id:'airwell-interior-r1', stage:'ready', since:'2026-10-26', project:'Interior Park Gaganpahad, R1 site requirement', client:'Airwell Engineering', ref:'—',
+   detail:'Revised shop drawings received 26 Oct; part list sent back and Airwell replied the same day to proceed for fabrication. PO requested.', th:'1a1768bcff01243b'},
+  {id:'comf-ril1spiral', stage:'ready', since:'2026-10-26', project:'RIL1 spiral round duct', client:'Comfonomics', ref:'PO 1543/26-27',
+   detail:'Vijayraj sent PO 1543/26-27 for the RIL1 spiral round duct on 26 Oct. Not acknowledged yet.', th:'1a176e7736d7c410'},
+  {id:'knnd-0504', stage:'ready', since:'2026-10-26', project:'Tellapur Techno City duct supply', client:'KNND Associates', ref:'PO-TS/0504/2026-27',
+   detail:'PO-TS/0504/2026-27 received 26 Oct for Tellapur Techno City. Deepak Rao asked for acknowledgment, dispatch schedule and item codes matched on the invoice.', th:'1a176d8d4bd44230'},
+  {id:'gmp-renewsys-rev1', stage:'approve', since:'2026-10-26', project:'Renewsys Hyderabad, Rev1 PO for TDF and round duct', client:'GMP Technical Solutions', ref:'Rev1 PO-PL-MAH-2624-MAY0029',
+   detail:'Revised quote sent 26 Oct against the Rev1 PO for TDF and round duct. Awaiting Taher\'s reply.', th:'19ebbb5f4490caa5'},
+
   {id:'comf-ssgi', stage:'ship', since:'2026-10-10', project:'RCPL Kurnool, SS and GI duct', client:'Comfonomics', ref:'PO 19 Aug',
    detail:'Balance payment received 10 Oct. Job is fully paid, so close out the delivery.', th:'1a01a1786bb9bf3b'},
 ];
 
 const LS = 'ductline-prod-board-v1';
-const TODAY = new Date('2026-10-24T00:00:00');
+const TODAY = new Date('2026-10-26T00:00:00');
 let edits = {}, custom = [], q = '', onlyUs = false, onlyLate = false, stageFilter = null, armed = null;
 
 function load(){
@@ -419,7 +428,7 @@ function board(){
 
 function render(){
   document.getElementById('asof').textContent =
-    `${visible().length} of ${allJobs().length} jobs shown · board seeded 24 Oct 2026`;
+    `${visible().length} of ${allJobs().length} jobs shown · board seeded 26 Oct 2026`;
   pipeline(); board();
 }
 
