@@ -152,7 +152,7 @@ footer p{margin:0 0 7px}
   <footer>
     <p><b>Square metres start blank on purpose.</b> Those figures live in the part-list and PO attachments, not in the email text. Fill each one from Arvind's part list and the totals across the top will add up.</p>
     <p>Everything you type is saved in this browser only. Opening the board on another device starts from the same job list with empty figures.</p>
-    <p>Job list is from the info@ductline.in mailbox as of 26 October 2026. Ask Claude to refresh it when new POs and approvals land.</p>
+    <p>Job list is from the info@ductline.in mailbox as of 27 October 2026. Ask Claude to refresh it when new POs and approvals land.</p>
   </footer>
 </div>
 
@@ -166,7 +166,7 @@ const STAGES = [
 ];
 const SK = Object.fromEntries(STAGES.map(s => [s.k, s]));
 
-// Refreshed from the mailbox on 26 Oct 2026. `since` = date that stage was last confirmed by email.
+// Refreshed from the mailbox on 27 Oct 2026. `since` = date that stage was last confirmed by email.
 const JOBS = [
   {id:'tap-candeur', stage:'ready', since:'2026-10-15', project:'Candeur Twins pressurisation', client:'TAP Engineering', ref:'PO 22978',
    detail:'PO 22978 received 15 Oct against the part list approved 13 Oct. Acknowledgment due in a day; we asked TAP to add 20G TDF price.', th:'1a13f22b927b2bed'},
@@ -204,8 +204,8 @@ const JOBS = [
    detail:'Part list approved 15 Oct with red comments to incorporate, including 3 nos shoe collar piece. Dispatch wanted tomorrow first half.', th:'1a13dd1d3f59087e'},
   {id:'star-santuary', stage:'ready', since:'2026-10-15', project:'Santuary Restaurant, flat oval AC duct', client:'Star Airwell', ref:'PO 15 Oct',
    detail:'Approved 15 Oct to proceed with fabrication after the revised part list. Star Airwell accounts released the PO the same day.', th:'1a133f27097e4da9'},
-  {id:'mkcrp-duct', stage:'ready', since:'2026-10-23', project:'Factory fabricated duct BOQ', client:'MKCRP', ref:'LOI',
-   detail:'LOI resent 23 Oct to start manufacturing; PO to be mailed next week. MKCRP asked 26 Oct to confirm a payment amount of Rs 10,51,000.', th:'1a15ded5f2a8e6c3'},
+  {id:'mkcrp-duct', stage:'making', since:'2026-10-27', project:'Factory fabricated duct BOQ', client:'MKCRP', ref:'LOI',
+   detail:'Payment of Rs 10,51,000 received 27 Oct and confirmed to MKCRP, against the LOI to start manufacturing. PO still to be mailed.', th:'1a15ded5f2a8e6c3'},
   {id:'airtech-athena', stage:'ready', since:'2026-10-23', project:'House of Athena, duct', client:'Airtech Cooling Services', ref:'PO 23 Oct',
    detail:'PO issued 23 Oct by Airtech, who asked for swift delivery. We replied the same day that the ducting price is fine but freight is extra, not in our scope.', th:'1a16735687b18e48'},
 
@@ -295,7 +295,7 @@ const JOBS = [
 ];
 
 const LS = 'ductline-prod-board-v1';
-const TODAY = new Date('2026-10-26T00:00:00');
+const TODAY = new Date('2026-10-27T00:00:00');
 let edits = {}, custom = [], q = '', onlyUs = false, onlyLate = false, stageFilter = null, armed = null;
 
 function load(){
@@ -431,7 +431,7 @@ function board(){
 
 function render(){
   document.getElementById('asof').textContent =
-    `${visible().length} of ${allJobs().length} jobs shown · board seeded 26 Oct 2026`;
+    `${visible().length} of ${allJobs().length} jobs shown · board seeded 27 Oct 2026`;
   pipeline(); board();
 }
 
