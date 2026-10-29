@@ -152,7 +152,7 @@ footer p{margin:0 0 7px}
   <footer>
     <p><b>Square metres start blank on purpose.</b> Those figures live in the part-list and PO attachments, not in the email text. Fill each one from Arvind's part list and the totals across the top will add up.</p>
     <p>Everything you type is saved in this browser only. Opening the board on another device starts from the same job list with empty figures.</p>
-    <p>Job list is from the info@ductline.in mailbox as of 27 October 2026. Ask Claude to refresh it when new POs and approvals land.</p>
+    <p>Job list is from the info@ductline.in mailbox as of 29 October 2026. Ask Claude to refresh it when new POs and approvals land.</p>
   </footer>
 </div>
 
@@ -166,7 +166,7 @@ const STAGES = [
 ];
 const SK = Object.fromEntries(STAGES.map(s => [s.k, s]));
 
-// Refreshed from the mailbox on 27 Oct 2026. `since` = date that stage was last confirmed by email.
+// Refreshed from the mailbox on 29 Oct 2026. `since` = date that stage was last confirmed by email.
 const JOBS = [
   {id:'tap-candeur', stage:'ready', since:'2026-10-15', project:'Candeur Twins pressurisation', client:'TAP Engineering', ref:'PO 22978',
    detail:'PO 22978 received 15 Oct against the part list approved 13 Oct. Acknowledgment due in a day; we asked TAP to add 20G TDF price.', th:'1a13f22b927b2bed'},
@@ -204,10 +204,10 @@ const JOBS = [
    detail:'Part list approved 15 Oct with red comments to incorporate, including 3 nos shoe collar piece. Dispatch wanted tomorrow first half.', th:'1a13dd1d3f59087e'},
   {id:'star-santuary', stage:'ready', since:'2026-10-15', project:'Santuary Restaurant, flat oval AC duct', client:'Star Airwell', ref:'PO 15 Oct',
    detail:'Approved 15 Oct to proceed with fabrication after the revised part list. Star Airwell accounts released the PO the same day.', th:'1a133f27097e4da9'},
-  {id:'mkcrp-duct', stage:'making', since:'2026-10-27', project:'Factory fabricated duct BOQ', client:'MKCRP', ref:'LOI',
-   detail:'Payment of Rs 10,51,000 received 27 Oct; revised R1 LOI issued the same day to start manufacturing, insulation delivery in October. PO still awaited.', th:'1a15ded5f2a8e6c3'},
-  {id:'airtech-athena', stage:'ready', since:'2026-10-23', project:'House of Athena, duct', client:'Airtech Cooling Services', ref:'PO 23 Oct',
-   detail:'PO issued 23 Oct by Airtech, who asked for swift delivery. We replied the same day that the ducting price is fine but freight is extra, not in our scope.', th:'1a16735687b18e48'},
+  {id:'mkcrp-duct', stage:'making', since:'2026-10-28', project:'Factory fabricated duct BOQ', client:'MKCRP', ref:'LOI',
+   detail:'Revised R1 LOI issued 27 Oct. We replied 28 Oct that the price holds only till month end and asked for POs in lots.', th:'1a15ded5f2a8e6c3'},
+  {id:'airtech-athena', stage:'ready', since:'2026-10-28', project:'House of Athena, duct', client:'Airtech Cooling Services', ref:'PO 28 Oct',
+   detail:'Revised PO without freight, with location, received 28 Oct. Airtech asked us to take the green-marked duct numbers as LOT-1 and give delivery time.', th:'1a16735687b18e48'},
 
   {id:'comf-ril1ahu', stage:'making', since:'2026-10-16', project:'RIL1 AHU fresh air duct', client:'Comfonomics', ref:'PO 1429/26-27',
    detail:'Advance payment for the fresh air duct received 16 Oct. Ashish asked for dispatch within this week.', th:'1a13e2a26363438e'},
@@ -232,8 +232,8 @@ const JOBS = [
    detail:'Part list sent 3 Oct against their size and drawing. Approval and PO still not received.', th:'1a100939071adf77'},
   {id:'cool-techniq', stage:'approve', since:'2026-10-15', project:'Flat oval and TDF rectangular ducts', client:'Cooling Techniq', ref:'—',
    detail:'Final quote sent 15 Oct, price valid four working days. First lot dispatches after commercial clearance, remaining lots every alternate day.', th:'1a111303ddd1a5a9'},
-  {id:'gmp-renewsheet', stage:'approve', since:'2026-10-23', project:'Renewsys Hyderabad, GI sheet supply', client:'GMP Technical Solutions', ref:'—',
-   detail:'Rates sent 22 Oct for 120 GSM JSW GI sheet, 22G 50 nos and 24G 100 nos. Taher asked 23 Oct for workable rates.', th:'1a1627cec084f76b'},
+  {id:'gmp-renewsheet', stage:'approve', since:'2026-10-29', project:'Renewsys Hyderabad, GI sheet supply', client:'GMP Technical Solutions', ref:'—',
+   detail:'Taher quoted 29 Oct what he gets elsewhere, 1,680 for 22G and 1,363 for 24G; our final 1,800 and 1,400 went the same day.', th:'1a1627cec084f76b'},
   {id:'saibalaji-cntrs', stage:'approve', since:'2026-10-16', project:'Controls data centre duct package', client:'Sai Balaji Infra', ref:'—',
    detail:'Revised TDS for TDF and FRP duct sent 16 Oct, after the BOQ compliance statement, data sheets and coil certificates went 12 Oct.', th:'1a07a8dced10c29f'},
   {id:'shinryo-emmvee', stage:'approve', since:'2026-10-07', project:'EMMVEE Solar Module R3, Devanahalli', client:'Shinryo Suvidha', ref:'—',
@@ -251,26 +251,26 @@ const JOBS = [
    detail:'Revised PO SEP0064 issued 5 Oct, cancelling PO OCT0004. Acknowledgment and GAD wanted on priority.', th:'1a10bb1425fcd3f1'},
   {id:'gmp-mauplenum', stage:'draw', since:'2026-10-21', project:'Exhaust fan plenum ducts', client:'GMP Technical Solutions', ref:'—',
    detail:'Further under-measurement sheet received 21 Oct for production. Part list for the 30 Sep exhaust fan plenum ducts still not sent.', th:'19fdc8fb63c49f5e'},
-  {id:'star-tanuj', stage:'draw', since:'2026-10-01', project:'Tanuj Brewery, new rectangular duct', client:'Star Airwell', ref:'—',
-   detail:'Image of a new rectangular duct requirement sent 1 Oct with a request for a quote. Nothing sent back yet.', th:'19fc65fb6326c76b'},
+  {id:'star-tanuj', stage:'draw', since:'2026-10-29', project:'Tanuj Brewery, new rectangular duct and plenum boxes', client:'Star Airwell', ref:'—',
+   detail:'Syed Ali asked 29 Oct to quote a return air and a supply air plenum box, 15mm acoustic insulation inside only. Not quoted yet.', th:'19fc65fb6326c76b'},
   {id:'avsts-partlayout', stage:'draw', since:'2026-09-29', project:'Numbering drawing and part layout', client:'AVSTS', ref:'—',
    detail:'Drawing received 28 Sep and chased 29 Sep for the numbering drawing, part layout and quote. No reply sent yet.', th:'1a0ebc5666c50fd5'},
-  {id:'cedar-fresh-air', stage:'draw', since:'2026-10-27', project:'Fresh air system, 20 SWG GI-TDF duct', client:'Cedar Act Solutions', ref:'—',
-   detail:'Part list sent 27 Oct; Cedar replied the same day that errors were found in the excel, to correct before proceeding for production.', th:'1a16da712bdb78d0'},
+  {id:'cedar-fresh-air', stage:'making', since:'2026-10-28', project:'Fresh air system, 20 SWG GI-TDF duct', client:'Cedar Act Solutions', ref:'—',
+   detail:'Advance payment made by NEFT 28 Oct. We confirmed the same day the part-list errors will be corrected and asked Cedar to release the PO.', th:'1a16da712bdb78d0'},
   {id:'comf-mumbai', stage:'approve', since:'2026-10-22', project:'Mumbai duct package, tender RFQ', client:'Comfonomics', ref:'—',
    detail:'Techno-commercial offer and quote QT-000026 sent 22 Oct for the Mumbai tender RFQ, after Mohini\'s 21 Oct reminder.', th:'1a14993837398a00'},
   {id:'tap-honer-dg', stage:'ready', since:'2026-10-23', project:'Honer Signatis DG room hot air exhaust', client:'TAP Engineering', ref:'—',
    detail:'Part list approved 23 Oct; TAP wants the DG room (6 nos) hot air exhaust delivered to site tomorrow. Quote sent, PO requested.', th:'1a157cfc9b8c6d2d'},
   {id:'quali-20g', stage:'making', since:'2026-10-27', project:'20G ducting requirement, RFQ 262707', client:'Quali-Tech', ref:'PO 155',
    detail:'Advance payment receipt and a PDC dated 20 Nov received 27 Oct; they asked us to check before depositing. Taken into production.', th:'1a15c55d4ff76c87'},
-  {id:'knnd-myhome', stage:'ready', since:'2026-10-24', project:'My Home Hyderabad, ducts and VCD', client:'KNND Associates', ref:'PO awaited',
-   detail:'All TTPL 3rd floor tag numbers approved 24 Oct, proceed with production. PO requested from KNND the same day.', th:'1a161958fb64a2bf'},
+  {id:'knnd-myhome', stage:'ready', since:'2026-10-28', project:'My Home Hyderabad, ducts and VCD', client:'KNND Associates', ref:'PO awaited',
+   detail:'All TTPL 3rd floor tag numbers approved 24 Oct. Deepak Rao said 28 Oct the amended PO would come the next day; still not received.', th:'1a161958fb64a2bf'},
   {id:'star-appl', stage:'ready', since:'2026-10-24', project:'APPL Office, rectangular and flat oval AC duct', client:'Star Airwell', ref:'PO 24 Oct',
    detail:'Revised 4th floor part list approved 24 Oct, proceed with production. Star Airwell accounts issued the PO against our quote the same day.', th:'1a16376dd609075b'},
   {id:'millnest-j10028', stage:'approve', since:'2026-10-27', project:'J10028 GI ducting', client:'Millnest', ref:'—',
    detail:'Part list and quote for J10028 sent 27 Oct against the 23 Oct routing drawing and exhaust single line diagram. Awaiting Millnest confirmation.', th:'1a167472176768c8'},
-  {id:'escube-harbour', stage:'draw', since:'2026-10-23', project:'Harbour Heights Mazgaon, duct', client:'Escube Airconditioning', ref:'—',
-   detail:'Duct enquiry for Harbour Heights received 23 Oct via sales, best rates asked at the earliest. Nothing sent back yet.', th:'1a1675661e682058'},
+  {id:'escube-harbour', stage:'approve', since:'2026-10-28', project:'Harbour Heights Mazgaon, duct', client:'Escube Airconditioning', ref:'—',
+   detail:'Rates for the Harbour Heights duct enquiry sent 28 Oct, five days after the enquiry came in via sales. Awaiting Escube.', th:'1a1675661e682058'},
   {id:'star-aashirvad', stage:'draw', since:'2026-10-23', project:'Aashirvad Pipes admin block, rectangular mouth piece', client:'Star Airwell', ref:'—',
    detail:'Drawing for the Ashirwad admin block rectangular mouth piece received 23 Oct with a quote asked at the earliest. Nothing sent back yet.', th:'19c7a6a9e4a2c10c'},
   {id:'star-anirudh', stage:'ready', since:'2026-10-24', project:'Dr Anirudh (Audio), rectangular AC duct', client:'Star Airwell', ref:'PO 24 Oct',
@@ -278,30 +278,41 @@ const JOBS = [
   {id:'divineair-sinq', stage:'approve', since:'2026-10-27', project:'Sinq Hotel, round AC duct', client:'Divine Air', ref:'—',
    detail:'Revised Sinq quote including duct hanging support sent 27 Oct, asking Divine Air to confirm for production and release the PO.', th:'1a16907798c3d1e7'},
 
-  {id:'airwell-interior-r1', stage:'ready', since:'2026-10-26', project:'Interior Park Gaganpahad, R1 site requirement', client:'Airwell Engineering', ref:'—',
-   detail:'Revised shop drawings received 26 Oct; part list sent back and Airwell replied the same day to proceed for fabrication. PO requested.', th:'1a1768bcff01243b'},
+  {id:'airwell-interior-r1', stage:'ready', since:'2026-10-28', project:'Interior Park Gaganpahad, R1 site requirement', client:'Airwell Engineering', ref:'PO 28 Oct',
+   detail:'PO received 28 Oct from Airwell accounts after they cleared fabrication 26 Oct. Delivery wanted at the earliest; they will provide the vehicle.', th:'1a1768bcff01243b'},
   {id:'comf-ril1spiral', stage:'ready', since:'2026-10-26', project:'RIL1 spiral round duct', client:'Comfonomics', ref:'PO 1543/26-27',
    detail:'Vijayraj sent PO 1543/26-27 for the RIL1 spiral round duct on 26 Oct. Not acknowledged yet.', th:'1a176e7736d7c410'},
   {id:'knnd-0504', stage:'ready', since:'2026-10-26', project:'Tellapur Techno City duct supply', client:'KNND Associates', ref:'PO-TS/0504/2026-27',
    detail:'PO-TS/0504/2026-27 received 26 Oct for Tellapur Techno City. Deepak Rao asked for acknowledgment, dispatch schedule and item codes matched on the invoice.', th:'1a176d8d4bd44230'},
-  {id:'gmp-renewsys-rev1', stage:'ready', since:'2026-10-27', project:'Renewsys Hyderabad, Rev1 PO for TDF and round duct', client:'GMP Technical Solutions', ref:'Rev1 PO-PL-MAH-2624-MAY0029',
-   detail:'Taher confirmed 27 Oct to proceed ahead on the revised rates and will share the PO copy tomorrow.', th:'19ebbb5f4490caa5'},
+  {id:'gmp-renewsys-rev1', stage:'ready', since:'2026-10-28', project:'Renewsys Hyderabad, Rev1 PO for TDF and round duct', client:'GMP Technical Solutions', ref:'PO-PL-MAH-2627-OCT0059',
+   detail:'PO-PL-MAH-2627-OCT0059 received 28 Oct against the revised rates. GMP want a PO acknowledgment and GAD plus TDS submitted for approval.', th:'1a18141aff3e1f70'},
 
   {id:'knnd-ghr-enq', stage:'draw', since:'2026-10-26', project:'GHR Hyderabad ducting enquiry', client:'KNND Associates', ref:'—',
    detail:'Bhanu sent the ducting enquiry sheet for the GHR project at Hyderabad on 26 Oct and asked for our offer as soon as possible.', th:'1a17808b80d1e181'},
-  {id:'alviz-ctrls', stage:'draw', since:'2026-10-27', project:'CtrlS Chandanvalley data centre ducting', client:'Alviz Electro', ref:'—',
-   detail:'Alviz asked 27 Oct for a final no-regret offer with TDS and test certificates, needed for TDS approval before awarding. Not sent yet.', th:'1a0ce742c1cdb199'},
-  {id:'knnd-myhome-site', stage:'draw', since:'2026-10-27', project:'My Home Hyderabad, site measurement ducts', client:'KNND Associates', ref:'—',
-   detail:'Gurunath asked 27 Oct for the working on the site measurement ducts, including the additional duct offset pieces raised 23 Oct. Not sent yet.', th:'1a161958fb64a2bf'},
+  {id:'alviz-ctrls', stage:'approve', since:'2026-10-29', project:'CtrlS Chandanvalley data centre ducting', client:'Alviz Electro', ref:'—',
+   detail:'Final no-regret offer with TDS and test certificates sent 29 Oct, as asked, for TDS approval before the award. Awaiting Alviz.', th:'1a0ce742c1cdb199'},
+  {id:'knnd-myhome-site', stage:'ready', since:'2026-10-28', project:'My Home Hyderabad, site measurement ducts', client:'KNND Associates', ref:'—',
+   detail:'Part list and quote sent 28 Oct; Gurunath confirmed the same day to proceed and deliver. Deepak then asked again for working for approval.', th:'1a161958fb64a2bf'},
   {id:'ace-deccantuni', stage:'ready', since:'2026-10-27', project:'Deccan Tuni, balance VAV cone piece duct', client:'ACE Envirotech', ref:'PO-ACE-MEP-1017546',
    detail:'Installed VAV cone piece mock-up approved at site 27 Oct; ACE asked us to proceed with the balance cone pieces and deliver at the earliest.', th:'1a0c2b5893490199'},
+
+  {id:'sobha-driverstoilet', stage:'ready', since:'2026-10-29', project:"Water Front drivers toilet, Stilt-01", client:'Sobha', ref:'—',
+   detail:'Layout received 28 Oct and part list sent 29 Oct; Jayaraman confirmed the same day to proceed for production and add 150 dia round collars.', th:'1a182465ad904d0d'},
+  {id:'knnd-0504-1', stage:'ready', since:'2026-10-29', project:'Tellapur Techno City duct supply, lot 1', client:'KNND Associates', ref:'PO-TS/0504/2026-27_1',
+   detail:'PO-TS/0504/2026-27_1 received 29 Oct. Acknowledgment and dispatch schedule requested, with the PO item code to be reflected on our invoice.', th:'1a1862fde5e6909d'},
+  {id:'appidi-ahu', stage:'approve', since:'2026-10-29', project:'AHU ducting layout, Part-1', client:'Appidi Technologies', ref:'—',
+   detail:'Quote sent 28 Oct and the PART-1 part list 29 Oct, asking confirmation for production. Remaining AHU tag drawing working still going on.', th:'1a181a9c20167c75'},
+  {id:'klima-ssduct', stage:'approve', since:'2026-10-29', project:'SS 304 schedule 5 round ducting', client:'Klima Pharm', ref:'—',
+   detail:'Enquiry came 28 Oct and, after their reminder, our quote went 29 Oct for the vacuum-tested SS 304 round duct. Awaiting Klima.', th:'1a181d9340298fa6'},
+  {id:'sobha-cl567', stage:'approve', since:'2026-10-28', project:'Sobha Clubhouse, 5th, 6th and terrace floors', client:'Sobha', ref:'—',
+   detail:'Part list for the club house 5th, 6th and terrace floors sent to Leston Pinto 28 Oct. No confirmation back yet.', th:'1a0a4061a40feea5'},
 
   {id:'comf-ssgi', stage:'ship', since:'2026-10-10', project:'RCPL Kurnool, SS and GI duct', client:'Comfonomics', ref:'PO 19 Aug',
    detail:'Balance payment received 10 Oct. Job is fully paid, so close out the delivery.', th:'1a01a1786bb9bf3b'},
 ];
 
 const LS = 'ductline-prod-board-v1';
-const TODAY = new Date('2026-10-27T00:00:00');
+const TODAY = new Date('2026-10-29T00:00:00');
 let edits = {}, custom = [], q = '', onlyUs = false, onlyLate = false, stageFilter = null, armed = null;
 
 function load(){
@@ -437,7 +448,7 @@ function board(){
 
 function render(){
   document.getElementById('asof').textContent =
-    `${visible().length} of ${allJobs().length} jobs shown · board seeded 27 Oct 2026`;
+    `${visible().length} of ${allJobs().length} jobs shown · board seeded 29 Oct 2026`;
   pipeline(); board();
 }
 
