@@ -1,1 +1,500 @@
-PLACEHOLDER
+<title>Ductline production board</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* Layout: pipeline tiles across the top, then jobs grouped by stage as dense editable rows. */
+:root{
+  --sheet:#E8EBEE; --panel:#F7F8FA; --ink:#171C21; --muted:#5A656E; --rule:#C6CDD4;
+  --field:#FFFFFF; --field-line:#B4BDC5;
+  --draw:#A1681A;   /* part list to prepare — our drawing office */
+  --wait:#5E7490;   /* with client — passive */
+  --ready:#1F3A68;  /* cleared to make */
+  --making:#2E7A4E; /* in production */
+  --ship:#0F6B6B;   /* ready to dispatch */
+  --late:#B8322A;
+  --head:"Barlow Condensed","Arial Narrow",Helvetica,sans-serif;
+  --body:"Barlow","Segoe UI",system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --sheet:#13171A; --panel:#1B2126; --ink:#E7EBEE; --muted:#97A3AC; --rule:#2C343A;
+  --field:#232B31; --field-line:#3A444C;
+  --draw:#D6A04A; --wait:#8FA6BF; --ready:#7CA1DE; --making:#5BBA83; --ship:#4FB5B5; --late:#E2665C;
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --sheet:#13171A; --panel:#1B2126; --ink:#E7EBEE; --muted:#97A3AC; --rule:#2C343A;
+  --field:#232B31; --field-line:#3A444C;
+  --draw:#D6A04A; --wait:#8FA6BF; --ready:#7CA1DE; --making:#5BBA83; --ship:#4FB5B5; --late:#E2665C;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--sheet);color:var(--ink);font:15px/1.5 var(--body)}
+.wrap{max-width:1240px;margin:0 auto;padding-block:26px 64px;padding-left:16px;padding-right:16px}
+
+header{display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;align-items:flex-end;
+  border-bottom:3px solid var(--ink);padding-bottom:14px}
+h1{font:700 42px/1 var(--head);margin:0;letter-spacing:.2px}
+.asof{color:var(--muted);font-size:14px}
+
+.pipeline{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--rule);
+  border:1px solid var(--rule);margin-top:20px}
+.tile{background:var(--panel);padding:13px 15px 15px;position:relative;text-align:left;border:0;
+  font:inherit;color:inherit;cursor:pointer;display:block;width:100%}
+.tile::before{content:"";position:absolute;inset:0 0 auto 0;height:5px;background:var(--c)}
+.tile[aria-pressed="true"]{background:var(--sheet);box-shadow:inset 0 0 0 2px var(--c)}
+.tile b{display:block;font:700 34px/1.05 var(--head);margin-top:7px;font-variant-numeric:tabular-nums}
+.tile span{display:block;color:var(--muted);font-size:13.5px;line-height:1.3}
+.tile em{display:block;font-style:normal;font:600 11px/1 var(--body);letter-spacing:.08em;
+  text-transform:uppercase;color:var(--c);margin-top:7px}
+
+.bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:18px 0 0}
+.bar input[type=search]{flex:1 1 220px;min-width:0;padding:9px 12px;border:1px solid var(--field-line);
+  background:var(--field);color:var(--ink);font:15px var(--body);border-radius:2px}
+.chip{font:600 14px var(--body);padding:8px 13px;border:1px solid var(--field-line);background:var(--field);
+  color:var(--muted);border-radius:2px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--sheet)}
+.add{font:600 17px/1 var(--head);background:var(--ink);color:var(--sheet);border:0;padding:11px 16px;
+  cursor:pointer;border-radius:2px;letter-spacing:.3px}
+button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible,textarea:focus-visible{
+  outline:3px solid var(--ready);outline-offset:2px}
+
+.group{margin-top:26px}
+.ghead{display:flex;align-items:baseline;gap:10px;border-bottom:2px solid var(--c);padding-bottom:5px}
+.ghead h2{font:700 21px/1 var(--head);margin:0;color:var(--c);letter-spacing:.3px}
+.ghead .n{font:600 13px var(--body);color:var(--muted);font-variant-numeric:tabular-nums}
+.ghead .who{margin-left:auto;font:600 11px/1 var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+
+.job{background:var(--panel);border:1px solid var(--rule);border-left:5px solid var(--c);
+  border-top:0;padding:13px 15px;display:grid;gap:12px;
+  grid-template-columns:minmax(0,1fr) auto}
+.group .job:first-of-type{border-top:1px solid var(--rule)}
+.job.flag{background:color-mix(in srgb,var(--late) 7%,var(--panel))}
+.who-line{font:600 11px/1 var(--body);letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.title{font:600 19px/1.2 var(--head);margin:2px 0 0}
+.title .client{color:var(--muted);font-weight:500}
+.ref{margin:3px 0 0;color:var(--muted);font-size:13.5px}
+.ref b{color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums}
+.detail{margin:6px 0 0;font-size:14.5px;max-width:74ch}
+.wait{font:700 13px/1 var(--body);color:var(--muted);font-variant-numeric:tabular-nums}
+.wait.hot{color:var(--late)}
+
+.fields{display:flex;flex-wrap:wrap;gap:8px;align-items:flex-end;margin-top:10px}
+.f{display:flex;flex-direction:column;gap:3px}
+.f label{font:600 10.5px/1 var(--body);letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.f input,.f select{padding:7px 9px;border:1px solid var(--field-line);background:var(--field);color:var(--ink);
+  font:15px var(--body);border-radius:2px}
+.f input.num{width:92px;font-variant-numeric:tabular-nums;text-align:right}
+.f input.g{width:76px}
+.f input.dt{width:150px}
+.f.grow{flex:1 1 220px;min-width:0}
+.f.grow input{width:100%}
+.f input.due-late{border-color:var(--late);color:var(--late);font-weight:600}
+
+.side{display:flex;flex-direction:column;align-items:flex-end;gap:8px;justify-content:space-between}
+.side select{padding:7px 9px;border:1px solid var(--field-line);background:var(--field);color:var(--ink);
+  font:600 14px var(--body);border-radius:2px;max-width:190px}
+.links{display:flex;gap:12px;align-items:center}
+.links a{color:var(--ready);font-weight:600;font-size:13px;text-decoration:none;border-bottom:1px solid currentColor}
+.del{background:none;border:0;color:var(--muted);font:600 13px var(--body);cursor:pointer;padding:2px 0;
+  text-decoration:underline}
+.del.armed{color:var(--late)}
+
+.newform{background:var(--panel);border:1px solid var(--rule);border-left:5px solid var(--ink);padding:15px;
+  margin-top:20px;display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end}
+.empty{background:var(--panel);border:1px solid var(--rule);padding:26px 16px;color:var(--muted);max-width:68ch}
+footer{margin-top:28px;color:var(--muted);font-size:13px;max-width:92ch}
+footer p{margin:0 0 7px}
+
+@media (max-width:860px){
+  .pipeline{grid-template-columns:repeat(2,1fr)}
+  .job{grid-template-columns:minmax(0,1fr)}
+  .side{align-items:flex-start;flex-direction:row;flex-wrap:wrap;gap:12px}
+}
+@media (max-width:480px){
+  h1{font-size:32px}
+  .pipeline{grid-template-columns:1fr}
+  .f.grow{flex-basis:100%}
+}
+@media (prefers-reduced-motion:no-preference){.tile,.chip{transition:background .15s,box-shadow .15s}}
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>Ductline production board</h1>
+    <div class="asof" id="asof"></div>
+  </header>
+
+  <div class="pipeline" id="pipeline"></div>
+
+  <div class="bar">
+    <input type="search" id="q" placeholder="Search client, project or PO" aria-label="Search jobs">
+    <button class="chip" id="f-us" aria-pressed="false" type="button">Waiting on us</button>
+    <button class="chip" id="f-late" aria-pressed="false" type="button">Past target date</button>
+    <button class="add" id="addbtn" type="button">Add job</button>
+  </div>
+
+  <div id="newwrap" hidden>
+    <div class="newform">
+      <div class="f grow"><label for="n-project">Project</label><input id="n-project" placeholder="e.g. Tower B staircase pressurisation"></div>
+      <div class="f grow"><label for="n-client">Client</label><input id="n-client" placeholder="e.g. Star Airwell"></div>
+      <div class="f"><label for="n-ref">PO / ref</label><input id="n-ref" class="g" style="width:130px" placeholder="PO no."></div>
+      <div class="f"><label for="n-stage">Stage</label>
+        <select id="n-stage"></select>
+      </div>
+      <button class="add" id="n-save" type="button">Save job</button>
+      <button class="del" id="n-cancel" type="button">Cancel</button>
+    </div>
+  </div>
+
+  <div id="board"></div>
+
+  <footer>
+    <p><b>Square metres start blank on purpose.</b> Those figures live in the part-list and PO attachments, not in the email text. Fill each one from Arvind's part list and the totals across the top will add up.</p>
+    <p>Everything you type is saved in this browser only. Opening the board on another device starts from the same job list with empty figures.</p>
+    <p>Job list is from the info@ductline.in mailbox as of 30 October 2026. Ask Claude to refresh it when new POs and approvals land.</p>
+  </footer>
+</div>
+
+<script>
+const STAGES = [
+  {k:'draw',   label:'Part list to prepare', who:'With our drawing office', c:'var(--draw)'},
+  {k:'approve',label:'With client for approval', who:'With the client', c:'var(--wait)'},
+  {k:'ready',  label:'Cleared to make', who:'With the shop floor', c:'var(--ready)'},
+  {k:'making', label:'In production', who:'With the shop floor', c:'var(--making)'},
+  {k:'ship',   label:'Ready to dispatch', who:'With dispatch', c:'var(--ship)'},
+];
+const SK = Object.fromEntries(STAGES.map(s => [s.k, s]));
+
+// Refreshed from the mailbox on 30 Oct 2026. `since` = date that stage was last confirmed by email.
+const JOBS = [
+  {id:'tap-candeur', stage:'ready', since:'2026-10-15', project:'Candeur Twins pressurisation', client:'TAP Engineering', ref:'PO 22978',
+   detail:'PO 22978 received 15 Oct against the part list approved 13 Oct. Acknowledgment due in a day; we asked TAP to add 20G TDF price.', th:'1a13f22b927b2bed'},
+  {id:'toot-amararaja', stage:'ready', since:'2026-10-26', project:'Amararaja E-Positive, flat oval', client:'Tootmnetech', ref:'PO 356(115)/H414',
+   detail:'Coupling sizes for the E-Positive flat oval ducts sent 26 Oct; Tootmnetech want one sample coupling of each size at site urgently today.', th:'1a12027ffba77474'},
+  {id:'tap-myscape', stage:'ready', since:'2026-10-14', project:'Myscape Stories, DG room', client:'TAP Engineering', ref:'—',
+   detail:'Part layout and part list approved 14 Oct, dispatch to site at the earliest. Quote sent 15 Oct asking TAP to release PO.', th:'1a11af0a317a8c93'},
+  {id:'tap-myscapeottomo', stage:'ready', since:'2026-10-22', project:'Myscape Ottomo Hyderabad, GI duct', client:'TAP Engineering', ref:'PO 22980',
+   detail:'PO 22980 received 22 Oct against PR H513. Acknowledgment asked within one day; TC required with supply and no price increase till project completion.', th:'1a162a7b5f289512'},
+  {id:'star-gm', stage:'ready', since:'2026-10-14', project:'GM Modular, rectangular ducting', client:'Star Airwell', ref:'PO 14 Oct',
+   detail:'Approved 14 Oct to proceed with fabrication. Star Airwell accounts released the PO against our quote the same day.', th:'1a1200bd7beed12f'},
+  {id:'airwell-naveen', stage:'ready', since:'2026-10-27', project:"Mr Naveen's residence", client:'Airwell Engineering', ref:'PO-02333',
+   detail:'PO-02333 received 27 Oct from Airwell accounts, after they confirmed 14 Oct to proceed including the return air duct.', th:'1a1301649e08fc86'},
+  {id:'comf-lot35', stage:'ready', since:'2026-10-14', project:'RCPL Kurnool, FA AHU corridor', client:'Comfonomics', ref:'Lot-36 Part-2',
+   detail:'Tarique cleared Lot-36 Part-2 FA AHU corridor rectangular duct on 14 Oct against the part list sent 13 Oct.', th:'19d549d1ddab2f89'},
+  {id:'knnd-ghr', stage:'ready', since:'2026-10-16', project:'GHR Infra plenum boxes and round duct', client:'KNND Associates', ref:'PO-TS/0481/2026-27',
+   detail:'PO-TS/0481/2026-27 received 16 Oct after Sai approved all duct numbers on 15 Oct. Acknowledgment and dispatch schedule requested.', th:'1a1431151fa94d11'},
+  {id:'knnd-infosys', stage:'ready', since:'2026-10-08', project:'Infosys Pocharam duct', client:'KNND Associates', ref:'PO awaited',
+   detail:'Gurunath cleared production 8 Oct and wants early delivery. PO against our quote still not received.', th:'1a111100481209bc'},
+  {id:'knnd-0417', stage:'ready', since:'2026-10-12', project:'PO-TS/0417 lot 2', client:'KNND Associates', ref:'PO-TS/0417/2026-27_2',
+   detail:'PO received 12 Oct. They want an acknowledgment and a dispatch schedule back.', th:'1a12e5e1a35d21ae'},
+  {id:'knnd-0417-1', stage:'ready', since:'2026-09-30', project:'PO-TS/0417 lot 1', client:'KNND Associates', ref:'PO-TS/0417/2026-27_1',
+   detail:'PO received 30 Sep. Deepak Rao asked for an acknowledgment and a dispatch schedule.', th:'1a0f272ae529c972'},
+  {id:'knnd-0463', stage:'ready', since:'2026-10-09', project:'PO-TS/0463 duct supply', client:'KNND Associates', ref:'PO-TS/0463/2026-27',
+   detail:'PO received 9 Oct. Acknowledgment and dispatch schedule requested, with item codes to be matched.', th:'1a11f78b3909c6b6'},
+  {id:'star-radhey', stage:'ready', since:'2026-10-08', project:'Radhey Raaga Clubhouse, 3rd floor DL1', client:'Star Airwell', ref:'PO 8 Oct',
+   detail:'AHU duct DL1 for the 3rd floor. PO issued 8 Oct against our 5 Oct quote.', th:'19e9261567f47ced'},
+  {id:'tap-lsrtudor', stage:'ready', since:'2026-10-05', project:'LSR Tudor, GI duct', client:'TAP Engineering', ref:'PO 22896',
+   detail:'PO 22896 for GI duct received 5 Oct. Acknowledgment asked for within one day.', th:'1a10c18731fb5c53'},
+  {id:'sobha-sheet', stage:'ready', since:'2026-10-14', project:'Water Front, GI sheet supply', client:'Sobha', ref:'Sheet PO',
+   detail:'Raju sent the confirmed POs on 14 Oct, re-attaching his 6 Oct request to arrange the sheet as per those POs.', th:'1a1393aa1b4d1e86'},
+  {id:'hanuman-honer', stage:'ready', since:'2026-09-29', project:'Honer Signatis clubhouse, GF', client:'Hanuman Enterprises', ref:'—',
+   detail:'Part list for Honer ground floor sent 29 Sep; Nazeer cleared production the same day. Kitchen ducting to be held.', th:'1a0d1b1902b9a666'},
+  {id:'tap-krc', stage:'ready', since:'2026-10-15', project:'KRC office and toilet room ventilation', client:'TAP Engineering', ref:'—',
+   detail:'Part list approved 15 Oct with red comments to incorporate, including 3 nos shoe collar piece. Dispatch wanted tomorrow first half.', th:'1a13dd1d3f59087e'},
+  {id:'star-santuary', stage:'ready', since:'2026-10-15', project:'Santuary Restaurant, flat oval AC duct', client:'Star Airwell', ref:'PO 15 Oct',
+   detail:'Approved 15 Oct to proceed with fabrication after the revised part list. Star Airwell accounts released the PO the same day.', th:'1a133f27097e4da9'},
+  {id:'mkcrp-duct', stage:'making', since:'2026-10-28', project:'Factory fabricated duct BOQ', client:'MKCRP', ref:'LOI',
+   detail:'Revised R1 LOI issued 27 Oct. We replied 28 Oct that the price holds only till month end and asked for POs in lots.', th:'1a15ded5f2a8e6c3'},
+  {id:'airtech-athena', stage:'draw', since:'2026-10-30', project:'House of Athena, duct', client:'Airtech Cooling Services', ref:'PO 28 Oct',
+   detail:'Shahzoor asked 30 Oct to revise the numbering drawing and chart against his latest drawing, as there are variations to consider. LOT-1 on hold.', th:'1a16735687b18e48'},
+
+  {id:'comf-ril1ahu', stage:'making', since:'2026-10-16', project:'RIL1 AHU fresh air duct', client:'Comfonomics', ref:'PO 1429/26-27',
+   detail:'Advance payment for the fresh air duct received 16 Oct. Ashish asked for dispatch within this week.', th:'1a13e2a26363438e'},
+  {id:'magna-jsw', stage:'making', since:'2026-10-08', project:'JSW EV Motor body shop', client:'Magnacool', ref:'Amendment PO',
+   detail:'Amendment PO issued 8 Oct. Neeraj asked for delivery status the same day and has had no answer since.', th:'1a0d743adef0a700'},
+  {id:'hanuman-ava', stage:'making', since:'2026-10-10', project:'AVA Hospital, ground floor balance', client:'Hanuman Enterprises', ref:'PO 16 Sep',
+   detail:'Nazeer confirmed to run on the existing PO rather than amend it. Roughly 3,800 sqm across the project.', th:'1a084caa3f887ff0'},
+  {id:'sobha-cl1', stage:'making', since:'2026-10-07', project:'Sobha Clubhouse, 1st floor', client:'Sobha', ref:'—',
+   detail:'HVAC comments cleared 7 Oct. Round duct for diffusers excluded until OEM neck sizes are fixed.', th:'1a115fa9dc2bba80'},
+  {id:'airwell-interior', stage:'making', since:'2026-10-05', project:'Interior Park, Gaganpahad', client:'Airwell Engineering', ref:'PO 5 Oct',
+   detail:'PO received after the tag sheet was revised for the quantity mismatch against the drawing.', th:'1a0ecdf616067e7a'},
+  {id:'comf-axial', stage:'making', since:'2026-10-10', project:'RCPL Kurnool, axial fan area', client:'Comfonomics', ref:'PO 24 Sep',
+   detail:'Advance payment receipt received 10 Oct.', th:'1a0d2c94d4e9c635'},
+  {id:'comf-ril1', stage:'making', since:'2026-10-10', project:'RIL1 powder coating duct', client:'Comfonomics', ref:'PO 30 Sep',
+   detail:'Advance receipt received 10 Oct. Powder coating vendor contact now on file.', th:'1a0f1d9a281c0fcc'},
+
+  {id:'sobha-cl2', stage:'ready', since:'2026-10-30', project:'Sobha Clubhouse, 2nd floor', client:'Sobha', ref:'—',
+   detail:'Part drawing comments received 30 Oct: proceed for production. Round duct for diffusers and unit mouth pieces on hold; toilet riser numbering drawing wanted.', th:'1a0a4061a40feea5'},
+  {id:'druva-vasant', stage:'approve', since:'2026-10-14', project:'Vasant Motors, oval ducting', client:'Druva Aircon', ref:'—',
+   detail:'Oval ducting drawing received 14 Oct. Quote sent back the same day asking them to confirm us for drawing working.', th:'1a089b90d0c58fe4'},
+  {id:'tap-lsrsheet', stage:'approve', since:'2026-10-03', project:'LSR, L-shape GI sheet 18G 120 GSM', client:'TAP Engineering', ref:'—',
+   detail:'Part list sent 3 Oct against their size and drawing. Approval and PO still not received.', th:'1a100939071adf77'},
+  {id:'cool-techniq', stage:'approve', since:'2026-10-15', project:'Flat oval and TDF rectangular ducts', client:'Cooling Techniq', ref:'—',
+   detail:'Final quote sent 15 Oct, price valid four working days. First lot dispatches after commercial clearance, remaining lots every alternate day.', th:'1a111303ddd1a5a9'},
+  {id:'gmp-renewsheet', stage:'approve', since:'2026-10-29', project:'Renewsys Hyderabad, GI sheet supply', client:'GMP Technical Solutions', ref:'—',
+   detail:'Taher quoted 29 Oct what he gets elsewhere, 1,680 for 22G and 1,363 for 24G; our final 1,800 and 1,400 went the same day.', th:'1a1627cec084f76b'},
+  {id:'saibalaji-cntrs', stage:'approve', since:'2026-10-16', project:'Controls data centre duct package', client:'Sai Balaji Infra', ref:'—',
+   detail:'Revised TDS for TDF and FRP duct sent 16 Oct, after the BOQ compliance statement, data sheets and coil certificates went 12 Oct.', th:'1a07a8dced10c29f'},
+  {id:'shinryo-emmvee', stage:'approve', since:'2026-10-07', project:'EMMVEE Solar Module R3, Devanahalli', client:'Shinryo Suvidha', ref:'—',
+   detail:'TDF and MS angle flange quotes sent 7 Oct against their BOQ tech specs. Nothing back from Naresh Maskar since.', th:'1a1150ad9ae0cae3'},
+  {id:'aph-aundh', stage:'approve', since:'2026-10-12', project:'Bank project Aundh, Pune, supply only', client:'APH Aircon', ref:'—',
+   detail:'Supply-only quote of Rs 4,78,971 basic sent 12 Oct, price validity five days. No reply received since.', th:'1a12e4520bbcd95f'},
+
+  {id:'tap-tod', stage:'draw', since:'2026-10-08', project:'TOD Basement-3 ventilation', client:'TAP Engineering', ref:'—',
+   detail:'Drawings for 120 GSM factory fabricated GI ducts received 8 Oct. Part list with numbering layout wanted on priority.', th:'1a11a1b7c8eec0bf'},
+  {id:'sobha-cl3', stage:'approve', since:'2026-10-17', project:'Sobha Clubhouse, 3rd floor numbering', client:'Sobha', ref:'—',
+   detail:'Part list for club house 3rd floor sent to Leston Pinto 17 Oct. No confirmation back yet.', th:'1a0a4061a40feea5'},
+  {id:'sobha-ugsump', stage:'draw', since:'2026-10-03', project:'Water Front, UG sump and WTP room', client:'Sobha', ref:'—',
+   detail:'Comments 3 Oct: add 17 nos shoe collar pieces to the duct quantity and resubmit.', th:'1a10012423b83853'},
+  {id:'gmp-renewsys', stage:'draw', since:'2026-10-05', project:'Renewsys Hyderabad, round duct', client:'GMP Technical Solutions', ref:'PO SEP0064',
+   detail:'Revised PO SEP0064 issued 5 Oct, cancelling PO OCT0004. Acknowledgment and GAD wanted on priority.', th:'1a10bb1425fcd3f1'},
+  {id:'gmp-mauplenum', stage:'draw', since:'2026-10-21', project:'Exhaust fan plenum ducts', client:'GMP Technical Solutions', ref:'—',
+   detail:'Further under-measurement sheet received 21 Oct for production. Part list for the 30 Sep exhaust fan plenum ducts still not sent.', th:'19fdc8fb63c49f5e'},
+  {id:'star-tanuj', stage:'ready', since:'2026-10-30', project:'Tanuj Brewery, new rectangular duct and plenum boxes', client:'Star Airwell', ref:'PO awaited',
+   detail:'Ali approved 30 Oct: proceed with production. Star Airwell accounts asked to release the PO as per quote and coordinate commercials.', th:'19fc65fb6326c76b'},
+  {id:'avsts-partlayout', stage:'draw', since:'2026-09-29', project:'Numbering drawing and part layout', client:'AVSTS', ref:'—',
+   detail:'Drawing received 28 Sep and chased 29 Sep for the numbering drawing, part layout and quote. No reply sent yet.', th:'1a0ebc5666c50fd5'},
+  {id:'cedar-fresh-air', stage:'making', since:'2026-10-28', project:'Fresh air system, 20 SWG GI-TDF duct', client:'Cedar Act Solutions', ref:'—',
+   detail:'Advance payment made by NEFT 28 Oct. We confirmed the same day the part-list errors will be corrected and asked Cedar to release the PO.', th:'1a16da712bdb78d0'},
+  {id:'comf-mumbai', stage:'approve', since:'2026-10-22', project:'Mumbai duct package, tender RFQ', client:'Comfonomics', ref:'—',
+   detail:'Techno-commercial offer and quote QT-000026 sent 22 Oct for the Mumbai tender RFQ, after Mohini\'s 21 Oct reminder.', th:'1a14993837398a00'},
+  {id:'tap-honer-dg', stage:'ready', since:'2026-10-23', project:'Honer Signatis DG room hot air exhaust', client:'TAP Engineering', ref:'—',
+   detail:'Part list approved 23 Oct; TAP wants the DG room (6 nos) hot air exhaust delivered to site tomorrow. Quote sent, PO requested.', th:'1a157cfc9b8c6d2d'},
+  {id:'quali-20g', stage:'making', since:'2026-10-27', project:'20G ducting requirement, RFQ 262707', client:'Quali-Tech', ref:'PO 155',
+   detail:'Advance payment receipt and a PDC dated 20 Nov received 27 Oct; they asked us to check before depositing. Taken into production.', th:'1a15c55d4ff76c87'},
+  {id:'knnd-myhome', stage:'ready', since:'2026-10-28', project:'My Home Hyderabad, ducts and VCD', client:'KNND Associates', ref:'PO awaited',
+   detail:'All TTPL 3rd floor tag numbers approved 24 Oct. Deepak Rao said 28 Oct the amended PO would come the next day; still not received.', th:'1a161958fb64a2bf'},
+  {id:'star-appl', stage:'ready', since:'2026-10-24', project:'APPL Office, rectangular and flat oval AC duct', client:'Star Airwell', ref:'PO 24 Oct',
+   detail:'Revised 4th floor part list approved 24 Oct, proceed with production. Star Airwell accounts issued the PO against our quote the same day.', th:'1a16376dd609075b'},
+  {id:'millnest-j10028', stage:'approve', since:'2026-10-27', project:'J10028 GI ducting', client:'Millnest', ref:'—',
+   detail:'Part list and quote for J10028 sent 27 Oct against the 23 Oct routing drawing and exhaust single line diagram. Awaiting Millnest confirmation.', th:'1a167472176768c8'},
+  {id:'escube-harbour', stage:'approve', since:'2026-10-28', project:'Harbour Heights Mazgaon, duct', client:'Escube Airconditioning', ref:'—',
+   detail:'Rates for the Harbour Heights duct enquiry sent 28 Oct, five days after the enquiry came in via sales. Awaiting Escube.', th:'1a1675661e682058'},
+  {id:'star-aashirvad', stage:'draw', since:'2026-10-23', project:'Aashirvad Pipes admin block, rectangular mouth piece', client:'Star Airwell', ref:'—',
+   detail:'Drawing for the Ashirwad admin block rectangular mouth piece received 23 Oct with a quote asked at the earliest. Nothing sent back yet.', th:'19c7a6a9e4a2c10c'},
+  {id:'star-anirudh', stage:'ready', since:'2026-10-24', project:'Dr Anirudh (Audio), rectangular AC duct', client:'Star Airwell', ref:'PO 24 Oct',
+   detail:'Approved 24 Oct to proceed with fabrication; Star Airwell accounts issued the PO for the Dr Anirudh site against our quote the same day.', th:'1a168c4c5362faac'},
+  {id:'divineair-sinq', stage:'approve', since:'2026-10-27', project:'Sinq Hotel, round AC duct', client:'Divine Air', ref:'—',
+   detail:'Revised Sinq quote including duct hanging support sent 27 Oct, asking Divine Air to confirm for production and release the PO.', th:'1a16907798c3d1e7'},
+
+  {id:'airwell-interior-r1', stage:'ready', since:'2026-10-28', project:'Interior Park Gaganpahad, R1 site requirement', client:'Airwell Engineering', ref:'PO 28 Oct',
+   detail:'PO received 28 Oct from Airwell accounts after they cleared fabrication 26 Oct. Delivery wanted at the earliest; they will provide the vehicle.', th:'1a1768bcff01243b'},
+  {id:'comf-ril1spiral', stage:'ready', since:'2026-10-26', project:'RIL1 spiral round duct', client:'Comfonomics', ref:'PO 1543/26-27',
+   detail:'Vijayraj sent PO 1543/26-27 for the RIL1 spiral round duct on 26 Oct. Not acknowledged yet.', th:'1a176e7736d7c410'},
+  {id:'knnd-0504', stage:'ready', since:'2026-10-26', project:'Tellapur Techno City duct supply', client:'KNND Associates', ref:'PO-TS/0504/2026-27',
+   detail:'PO-TS/0504/2026-27 received 26 Oct for Tellapur Techno City. Deepak Rao asked for acknowledgment, dispatch schedule and item codes matched on the invoice.', th:'1a176d8d4bd44230'},
+  {id:'gmp-renewsys-rev1', stage:'ready', since:'2026-10-28', project:'Renewsys Hyderabad, Rev1 PO for TDF and round duct', client:'GMP Technical Solutions', ref:'PO-PL-MAH-2627-OCT0059',
+   detail:'PO-PL-MAH-2627-OCT0059 received 28 Oct against the revised rates. GMP want a PO acknowledgment and GAD plus TDS submitted for approval.', th:'1a18141aff3e1f70'},
+
+  {id:'knnd-ghr-enq', stage:'draw', since:'2026-10-26', project:'GHR Hyderabad ducting enquiry', client:'KNND Associates', ref:'—',
+   detail:'Bhanu sent the ducting enquiry sheet for the GHR project at Hyderabad on 26 Oct and asked for our offer as soon as possible.', th:'1a17808b80d1e181'},
+  {id:'alviz-ctrls', stage:'approve', since:'2026-10-29', project:'CtrlS Chandanvalley data centre ducting', client:'Alviz Electro', ref:'—',
+   detail:'Final no-regret offer with TDS and test certificates sent 29 Oct, as asked, for TDS approval before the award. Awaiting Alviz.', th:'1a0ce742c1cdb199'},
+  {id:'knnd-myhome-site', stage:'ready', since:'2026-10-28', project:'My Home Hyderabad, site measurement ducts', client:'KNND Associates', ref:'—',
+   detail:'Part list and quote sent 28 Oct; Gurunath confirmed the same day to proceed and deliver. Deepak then asked again for working for approval.', th:'1a161958fb64a2bf'},
+  {id:'ace-deccantuni', stage:'ready', since:'2026-10-27', project:'Deccan Tuni, balance VAV cone piece duct', client:'ACE Envirotech', ref:'PO-ACE-MEP-1017546',
+   detail:'Installed VAV cone piece mock-up approved at site 27 Oct; ACE asked us to proceed with the balance cone pieces and deliver at the earliest.', th:'1a0c2b5893490199'},
+
+  {id:'sobha-driverstoilet', stage:'ready', since:'2026-10-29', project:"Water Front drivers toilet, Stilt-01", client:'Sobha', ref:'—',
+   detail:'Layout received 28 Oct and part list sent 29 Oct; Jayaraman confirmed the same day to proceed for production and add 150 dia round collars.', th:'1a182465ad904d0d'},
+  {id:'knnd-0504-1', stage:'ready', since:'2026-10-29', project:'Tellapur Techno City duct supply, lot 1', client:'KNND Associates', ref:'PO-TS/0504/2026-27_1',
+   detail:'PO-TS/0504/2026-27_1 received 29 Oct. Acknowledgment and dispatch schedule requested, with the PO item code to be reflected on our invoice.', th:'1a1862fde5e6909d'},
+  {id:'appidi-ahu', stage:'approve', since:'2026-10-30', project:'AHU ducting layout, Part-1', client:'Appidi Technologies', ref:'—',
+   detail:'PART-1 part list sent 29 Oct and PART-2+3 on 30 Oct, asking confirmation for production. Remaining AHU tag drawing working still going on.', th:'1a181a9c20167c75'},
+  {id:'klima-ssduct', stage:'approve', since:'2026-10-29', project:'SS 304 schedule 5 round ducting', client:'Klima Pharm', ref:'—',
+   detail:'Enquiry came 28 Oct and, after their reminder, our quote went 29 Oct for the vacuum-tested SS 304 round duct. Awaiting Klima.', th:'1a181d9340298fa6'},
+  {id:'sobha-cl567', stage:'approve', since:'2026-10-28', project:'Sobha Clubhouse, 5th, 6th and terrace floors', client:'Sobha', ref:'—',
+   detail:'Part list for the club house 5th, 6th and terrace floors sent to Leston Pinto 28 Oct. No confirmation back yet.', th:'1a0a4061a40feea5'},
+
+  {id:'kmv-louvers', stage:'draw', since:'2026-10-28', project:'Vijayawada Airport outside air louvers', client:'KMV Projects', ref:'SR4000000579',
+   detail:'RFQ SR4000000579 received 28 Oct for 300 sqm outside air louvers with back drop louvers, drawings attached. Quote asked for; nothing sent yet.', th:'1a180c5f1facaff1'},
+
+  {id:'matsya-itc', stage:'draw', since:'2026-10-30', project:'ITC ground floor, existing VSU and VEU round spiral duct', client:'Matsya Green Enviro', ref:'—',
+   detail:'Part list and quote sent 30 Oct; Madhu returned the ITC GF part list same day with comments and approval, asking for a revised quotation.', th:'1a18ca3806f3413d'},
+  {id:'toot-sudha', stage:'approve', since:'2026-10-30', project:'Sudha Phinoex Research Labs, GI TDF duct', client:'Tootmnetech', ref:'—',
+   detail:'Enquiry 30 Oct for 550 sqm of 24G and 600 sqm of 22G GI TDF duct; our quote went back the same day.', th:'1a18b594a521654e'},
+
+  {id:'tap-rphfuji', stage:'approve', since:'2026-10-30', project:'RPH Fuji, fire rated and standard GI duct', client:'TAP Engineering', ref:'—',
+   detail:'Ramesh Babu asked 30 Oct for a revised quote with technical submittals and catalogues; our RPH R1 quote went back the same day.', th:'1a18c408d398682a'},
+  {id:'toot-crown', stage:'draw', since:'2026-10-30', project:'Crown Project Khajaguda, L-profile GSS ducting', client:'Tootmnetech', ref:'—',
+   detail:'Lavanya asked 30 Oct for a quote on 8,300 sqm of 120 GSM L-profile GSS TDF duct plus 3,500 kg MS L angle.', th:'1a18c759564589f7'},
+
+  {id:'ctrls-skidsupports', stage:'draw', since:'2026-10-30', project:'Data centre skid supports for SS pipes', client:'CtrlS Datacenters', ref:'—',
+   detail:'Ashok Teja sent the skid supports BOQ 30 Oct for MS powder coated heavy slotted channel supports, asking for our commercial proposal with TDS.', th:'1a18cd902efc4602'},
+
+  {id:'comf-ssgi', stage:'ship', since:'2026-10-10', project:'RCPL Kurnool, SS and GI duct', client:'Comfonomics', ref:'PO 19 Aug',
+   detail:'Balance payment received 10 Oct. Job is fully paid, so close out the delivery.', th:'1a01a1786bb9bf3b'},
+];
+
+const LS = 'ductline-prod-board-v1';
+const TODAY = new Date('2026-10-30T00:00:00');
+let edits = {}, custom = [], q = '', onlyUs = false, onlyLate = false, stageFilter = null, armed = null;
+
+function load(){
+  try{ const r = JSON.parse(localStorage.getItem(LS) || '{}');
+    edits = r.edits || {}; custom = Array.isArray(r.custom) ? r.custom : [];
+  }catch(e){ edits = {}; custom = []; }
+}
+function save(){
+  try{ localStorage.setItem(LS, JSON.stringify({edits, custom})); }catch(e){}
+}
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const days = d => { const t = new Date(d + 'T00:00:00'); return isNaN(t) ? null : Math.round((TODAY - t)/864e5); };
+const gmail = id => 'https://mail.google.com/mail/?authuser=info@ductline.in#all/' + encodeURIComponent(id);
+
+function allJobs(){
+  return [...JOBS, ...custom]
+    .map(j => ({...j, ...(edits[j.id] || {})}))
+    .filter(j => !j.hidden);
+}
+function isLate(j){
+  if(!j.due) return false;
+  return new Date(j.due + 'T00:00:00') < TODAY && j.stage !== 'ship';
+}
+function visible(){
+  const t = q.trim().toLowerCase();
+  return allJobs().filter(j => {
+    if(stageFilter && j.stage !== stageFilter) return false;
+    if(onlyUs && j.stage === 'approve') return false;
+    if(onlyLate && !isLate(j)) return false;
+    if(t && !`${j.project} ${j.client} ${j.ref} ${j.detail||''}`.toLowerCase().includes(t)) return false;
+    return true;
+  });
+}
+
+function pipeline(){
+  const js = allJobs();
+  document.getElementById('pipeline').innerHTML = STAGES.map(s => {
+    const inStage = js.filter(j => j.stage === s.k);
+    const sqm = inStage.reduce((a,j) => a + (parseFloat(j.sqm) || 0), 0);
+    const late = inStage.filter(isLate).length;
+    const note = sqm > 0 ? `${sqm.toLocaleString('en-IN')} sqm entered` : 'no sqm entered yet';
+    return `<button class="tile" style="--c:${s.c}" data-stage="${s.k}" type="button"
+      aria-pressed="${stageFilter === s.k}">
+      <em>${esc(s.label)}</em><b>${inStage.length}</b>
+      <span>${esc(note)}${late ? ` · ${late} past date` : ''}</span></button>`;
+  }).join('');
+  document.querySelectorAll('.tile').forEach(t => t.onclick = () => {
+    stageFilter = stageFilter === t.dataset.stage ? null : t.dataset.stage;
+    render();
+  });
+}
+
+function jobRow(j){
+  const waited = days(j.since);
+  const late = isLate(j);
+  const hot = waited !== null && waited >= 5 && j.stage !== 'ship';
+  return `<div class="job ${late ? 'flag' : ''}" style="--c:${SK[j.stage].c}">
+    <div>
+      <p class="who-line">${esc(SK[j.stage].who)}</p>
+      <p class="title">${esc(j.project)} <span class="client">/ ${esc(j.client)}</span></p>
+      <p class="ref">${j.ref && j.ref !== '—' ? `<b>${esc(j.ref)}</b> · ` : ''}<span class="wait ${hot ? 'hot' : ''}">${waited === null ? '' : waited === 0 ? 'moved here today' : `${waited} day${waited === 1 ? '' : 's'} at this stage`}</span></p>
+      ${j.detail ? `<p class="detail">${esc(j.detail)}</p>` : ''}
+      <div class="fields">
+        <div class="f"><label for="sqm-${j.id}">Sq m</label>
+          <input class="num" id="sqm-${j.id}" data-id="${j.id}" data-k="sqm" inputmode="decimal" value="${esc(j.sqm || '')}" placeholder="—"></div>
+        <div class="f"><label for="g-${j.id}">Gauge</label>
+          <input class="g" id="g-${j.id}" data-id="${j.id}" data-k="gauge" value="${esc(j.gauge || '')}" placeholder="24G"></div>
+        <div class="f"><label for="due-${j.id}">Target date</label>
+          <input class="dt ${late ? 'due-late' : ''}" type="date" id="due-${j.id}" data-id="${j.id}" data-k="due" value="${esc(j.due || '')}"></div>
+        <div class="f grow"><label for="note-${j.id}">Shop note</label>
+          <input id="note-${j.id}" data-id="${j.id}" data-k="note" value="${esc(j.note || '')}" placeholder="Coil, operator, hold reason"></div>
+      </div>
+    </div>
+    <div class="side">
+      <select data-id="${j.id}" data-k="stage" aria-label="Stage for ${esc(j.project)}">
+        ${STAGES.map(s => `<option value="${s.k}" ${s.k === j.stage ? 'selected' : ''}>${esc(s.label)}</option>`).join('')}
+      </select>
+      <div class="links">
+        ${j.th ? `<a href="${gmail(j.th)}" target="_blank" rel="noopener">Open mail</a>` : ''}
+        <button class="del ${armed === j.id ? 'armed' : ''}" data-del="${j.id}" type="button">${armed === j.id ? 'Tap again to remove' : 'Remove'}</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function board(){
+  const js = visible();
+  const el = document.getElementById('board');
+  if(!js.length){
+    el.innerHTML = `<div class="group"><div class="empty">No jobs match this filter. Clear the search or tap the highlighted stage again to see the whole board.</div></div>`;
+    return;
+  }
+  el.innerHTML = STAGES.map(s => {
+    const rows = js.filter(j => j.stage === s.k)
+      .sort((a,b) => (a.due || '9999').localeCompare(b.due || '9999') || a.since.localeCompare(b.since));
+    if(!rows.length) return '';
+    const sqm = rows.reduce((a,j) => a + (parseFloat(j.sqm) || 0), 0);
+    return `<section class="group" style="--c:${s.c}">
+      <div class="ghead">
+        <h2>${esc(s.label)}</h2>
+        <span class="n">${rows.length} job${rows.length === 1 ? '' : 's'}${sqm > 0 ? ` · ${sqm.toLocaleString('en-IN')} sqm` : ''}</span>
+        <span class="who">${esc(s.who)}</span>
+      </div>
+      ${rows.map(jobRow).join('')}
+    </section>`;
+  }).join('');
+
+  el.querySelectorAll('input[data-k], select[data-k]').forEach(inp => {
+    const commit = () => {
+      const id = inp.dataset.id, k = inp.dataset.k;
+      edits[id] = {...(edits[id] || {}), [k]: inp.value};
+      if(k === 'stage') edits[id].since = new Date().toISOString().slice(0,10);
+      save();
+      if(k === 'stage' || k === 'sqm' || k === 'due') render(); else pipeline();
+    };
+    if(inp.tagName === 'SELECT') inp.onchange = commit;
+    else { inp.onchange = commit; inp.oninput = () => { const id = inp.dataset.id;
+      edits[id] = {...(edits[id] || {}), [inp.dataset.k]: inp.value}; save(); }; }
+  });
+  el.querySelectorAll('[data-del]').forEach(b => b.onclick = () => {
+    const id = b.dataset.del;
+    if(armed !== id){
+      armed = id; render();
+      setTimeout(() => { if(armed === id){ armed = null; render(); } }, 4000);
+      return;
+    }
+    armed = null;
+    custom = custom.filter(j => j.id !== id);
+    edits[id] = {...(edits[id] || {}), hidden:true};
+    save(); render();
+  });
+}
+
+function render(){
+  document.getElementById('asof').textContent =
+    `${visible().length} of ${allJobs().length} jobs shown · board seeded 30 Oct 2026`;
+  pipeline(); board();
+}
+
+document.getElementById('q').oninput = e => { q = e.target.value; render(); };
+document.getElementById('f-us').onclick = e => {
+  onlyUs = !onlyUs; e.currentTarget.setAttribute('aria-pressed', String(onlyUs)); render(); };
+document.getElementById('f-late').onclick = e => {
+  onlyLate = !onlyLate; e.currentTarget.setAttribute('aria-pressed', String(onlyLate)); render(); };
+
+const nStage = document.getElementById('n-stage');
+nStage.innerHTML = STAGES.map(s => `<option value="${s.k}">${esc(s.label)}</option>`).join('');
+nStage.value = 'draw';
+document.getElementById('addbtn').onclick = () => {
+  const w = document.getElementById('newwrap');
+  w.hidden = !w.hidden;
+  if(!w.hidden) document.getElementById('n-project').focus();
+};
+document.getElementById('n-cancel').onclick = () => { document.getElementById('newwrap').hidden = true; };
+document.getElementById('n-save').onclick = () => {
+  const project = document.getElementById('n-project').value.trim();
+  const client = document.getElementById('n-client').value.trim();
+  if(!project){ document.getElementById('n-project').focus(); return; }
+  custom.push({id:'c' + Date.now(), project, client: client || 'Not set',
+    ref: document.getElementById('n-ref').value.trim() || '—',
+    stage: nStage.value, since: new Date().toISOString().slice(0,10), detail:''});
+  save();
+  ['n-project','n-client','n-ref'].forEach(i => document.getElementById(i).value = '');
+  document.getElementById('newwrap').hidden = true;
+  render();
+};
+
+load(); render();
+</script>
