@@ -152,7 +152,7 @@ footer p{margin:0 0 7px}
   <footer>
     <p><b>Square metres start blank on purpose.</b> Those figures live in the part-list and PO attachments, not in the email text. Fill each one from Arvind's part list and the totals across the top will add up.</p>
     <p>Everything you type is saved in this browser only. Opening the board on another device starts from the same job list with empty figures.</p>
-    <p>Job list is from the info@ductline.in mailbox as of 29 October 2026. Ask Claude to refresh it when new POs and approvals land.</p>
+    <p>Job list is from the info@ductline.in mailbox as of 30 October 2026. Ask Claude to refresh it when new POs and approvals land.</p>
   </footer>
 </div>
 
@@ -166,7 +166,7 @@ const STAGES = [
 ];
 const SK = Object.fromEntries(STAGES.map(s => [s.k, s]));
 
-// Refreshed from the mailbox on 29 Oct 2026. `since` = date that stage was last confirmed by email.
+// Refreshed from the mailbox on 30 Oct 2026. `since` = date that stage was last confirmed by email.
 const JOBS = [
   {id:'tap-candeur', stage:'ready', since:'2026-10-15', project:'Candeur Twins pressurisation', client:'TAP Engineering', ref:'PO 22978',
    detail:'PO 22978 received 15 Oct against the part list approved 13 Oct. Acknowledgment due in a day; we asked TAP to add 20G TDF price.', th:'1a13f22b927b2bed'},
@@ -224,8 +224,8 @@ const JOBS = [
   {id:'comf-ril1', stage:'making', since:'2026-10-10', project:'RIL1 powder coating duct', client:'Comfonomics', ref:'PO 30 Sep',
    detail:'Advance receipt received 10 Oct. Powder coating vendor contact now on file.', th:'1a0f1d9a281c0fcc'},
 
-  {id:'sobha-cl2', stage:'approve', since:'2026-10-07', project:'Sobha Clubhouse, 2nd floor', client:'Sobha', ref:'—',
-   detail:'Part list sent 7 Oct, no confirmation back yet.', th:'1a0a4061a40feea5'},
+  {id:'sobha-cl2', stage:'ready', since:'2026-10-30', project:'Sobha Clubhouse, 2nd floor', client:'Sobha', ref:'—',
+   detail:'Part drawing comments received 30 Oct: proceed for production. Round duct for diffusers and unit mouth pieces on hold; toilet riser numbering drawing wanted.', th:'1a0a4061a40feea5'},
   {id:'druva-vasant', stage:'approve', since:'2026-10-14', project:'Vasant Motors, oval ducting', client:'Druva Aircon', ref:'—',
    detail:'Oval ducting drawing received 14 Oct. Quote sent back the same day asking them to confirm us for drawing working.', th:'1a089b90d0c58fe4'},
   {id:'tap-lsrsheet', stage:'approve', since:'2026-10-03', project:'LSR, L-shape GI sheet 18G 120 GSM', client:'TAP Engineering', ref:'—',
@@ -307,12 +307,15 @@ const JOBS = [
   {id:'sobha-cl567', stage:'approve', since:'2026-10-28', project:'Sobha Clubhouse, 5th, 6th and terrace floors', client:'Sobha', ref:'—',
    detail:'Part list for the club house 5th, 6th and terrace floors sent to Leston Pinto 28 Oct. No confirmation back yet.', th:'1a0a4061a40feea5'},
 
+  {id:'kmv-louvers', stage:'draw', since:'2026-10-28', project:'Vijayawada Airport outside air louvers', client:'KMV Projects', ref:'SR4000000579',
+   detail:'RFQ SR4000000579 received 28 Oct for 300 sqm outside air louvers with back drop louvers, drawings attached. Quote asked for; nothing sent yet.', th:'1a180c5f1facaff1'},
+
   {id:'comf-ssgi', stage:'ship', since:'2026-10-10', project:'RCPL Kurnool, SS and GI duct', client:'Comfonomics', ref:'PO 19 Aug',
    detail:'Balance payment received 10 Oct. Job is fully paid, so close out the delivery.', th:'1a01a1786bb9bf3b'},
 ];
 
 const LS = 'ductline-prod-board-v1';
-const TODAY = new Date('2026-10-29T00:00:00');
+const TODAY = new Date('2026-10-30T00:00:00');
 let edits = {}, custom = [], q = '', onlyUs = false, onlyLate = false, stageFilter = null, armed = null;
 
 function load(){
@@ -448,7 +451,7 @@ function board(){
 
 function render(){
   document.getElementById('asof').textContent =
-    `${visible().length} of ${allJobs().length} jobs shown · board seeded 29 Oct 2026`;
+    `${visible().length} of ${allJobs().length} jobs shown · board seeded 30 Oct 2026`;
   pipeline(); board();
 }
 
