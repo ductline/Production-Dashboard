@@ -152,7 +152,7 @@ footer p{margin:0 0 7px}
   <footer>
     <p><b>Square metres start blank on purpose.</b> Those figures live in the part-list and PO attachments, not in the email text. Fill each one from Arvind's part list and the totals across the top will add up.</p>
     <p>Everything you type is saved in this browser only. Opening the board on another device starts from the same job list with empty figures.</p>
-    <p>Job list is from the info@ductline.in mailbox as of 30 October 2026. Ask Claude to refresh it when new POs and approvals land.</p>
+    <p>Job list is from the info@ductline.in mailbox as of 31 October 2026. Ask Claude to refresh it when new POs and approvals land.</p>
   </footer>
 </div>
 
@@ -166,7 +166,7 @@ const STAGES = [
 ];
 const SK = Object.fromEntries(STAGES.map(s => [s.k, s]));
 
-// Refreshed from the mailbox on 30 Oct 2026. `since` = date that stage was last confirmed by email.
+// Refreshed from the mailbox on 31 Oct 2026. `since` = date that stage was last confirmed by email.
 const JOBS = [
   {id:'tap-candeur', stage:'ready', since:'2026-10-15', project:'Candeur Twins pressurisation', client:'TAP Engineering', ref:'PO 22978',
    detail:'PO 22978 received 15 Oct against the part list approved 13 Oct. Acknowledgment due in a day; we asked TAP to add 20G TDF price.', th:'1a13f22b927b2bed'},
@@ -251,8 +251,8 @@ const JOBS = [
    detail:'Revised PO SEP0064 issued 5 Oct, cancelling PO OCT0004. Acknowledgment and GAD wanted on priority.', th:'1a10bb1425fcd3f1'},
   {id:'gmp-mauplenum', stage:'draw', since:'2026-10-21', project:'Exhaust fan plenum ducts', client:'GMP Technical Solutions', ref:'—',
    detail:'Further under-measurement sheet received 21 Oct for production. Part list for the 30 Sep exhaust fan plenum ducts still not sent.', th:'19fdc8fb63c49f5e'},
-  {id:'star-tanuj', stage:'ready', since:'2026-10-30', project:'Tanuj Brewery, new rectangular duct and plenum boxes', client:'Star Airwell', ref:'PO awaited',
-   detail:'Ali approved 30 Oct: proceed with production. Star Airwell accounts asked to release the PO as per quote and coordinate commercials.', th:'19fc65fb6326c76b'},
+  {id:'star-tanuj', stage:'ready', since:'2026-10-31', project:'Tanuj Brewery, new rectangular duct and plenum boxes', client:'Star Airwell', ref:'PO 31 Oct',
+   detail:'Ali approved 30 Oct to proceed. Star Airwell accounts issued the PO for the Tanuj Brewery site against our quotations on 31 Oct.', th:'19fc65fb6326c76b'},
   {id:'avsts-partlayout', stage:'draw', since:'2026-09-29', project:'Numbering drawing and part layout', client:'AVSTS', ref:'—',
    detail:'Drawing received 28 Sep and chased 29 Sep for the numbering drawing, part layout and quote. No reply sent yet.', th:'1a0ebc5666c50fd5'},
   {id:'cedar-fresh-air', stage:'making', since:'2026-10-28', project:'Fresh air system, 20 SWG GI-TDF duct', client:'Cedar Act Solutions', ref:'—',
@@ -294,7 +294,7 @@ const JOBS = [
   {id:'knnd-myhome-site', stage:'ready', since:'2026-10-28', project:'My Home Hyderabad, site measurement ducts', client:'KNND Associates', ref:'—',
    detail:'Part list and quote sent 28 Oct; Gurunath confirmed the same day to proceed and deliver. Deepak then asked again for working for approval.', th:'1a161958fb64a2bf'},
   {id:'ace-deccantuni', stage:'ready', since:'2026-10-27', project:'Deccan Tuni, balance VAV cone piece duct', client:'ACE Envirotech', ref:'PO-ACE-MEP-1017546',
-   detail:'Installed VAV cone piece mock-up approved at site 27 Oct; ACE asked us to proceed with the balance cone pieces and deliver at the earliest.', th:'1a0c2b5893490199'},
+   detail:'Installed VAV cone piece mock-up approved at site 27 Oct; ACE asked 31 Oct for a PI with bank details to release the payment.', th:'1a0c2b5893490199'},
 
   {id:'sobha-driverstoilet', stage:'ready', since:'2026-10-29', project:"Water Front drivers toilet, Stilt-01", client:'Sobha', ref:'—',
    detail:'Layout received 28 Oct and part list sent 29 Oct; Jayaraman confirmed the same day to proceed for production and add 150 dia round collars.', th:'1a182465ad904d0d'},
@@ -323,12 +323,15 @@ const JOBS = [
   {id:'ctrls-skidsupports', stage:'draw', since:'2026-10-30', project:'Data centre skid supports for SS pipes', client:'CtrlS Datacenters', ref:'—',
    detail:'Ashok Teja sent the skid supports BOQ 30 Oct for MS powder coated heavy slotted channel supports, asking for our commercial proposal with TDS.', th:'1a18cd902efc4602'},
 
+  {id:'toot-amararaja-corridor', stage:'draw', since:'2026-10-31', project:'Amararaja E-Positive, 2nd and 3rd floor corridor flat oval', client:'Tootmnetech', ref:'PO 356(115)/H414',
+   detail:'Corridor flat oval ducting for the 2nd and 3rd floors sent for production 31 Oct; Tootmnetech want the numbering drawing and measurement sheet for approval.', th:'1a12027ffba77474'},
+
   {id:'comf-ssgi', stage:'ship', since:'2026-10-10', project:'RCPL Kurnool, SS and GI duct', client:'Comfonomics', ref:'PO 19 Aug',
    detail:'Balance payment received 10 Oct. Job is fully paid, so close out the delivery.', th:'1a01a1786bb9bf3b'},
 ];
 
 const LS = 'ductline-prod-board-v1';
-const TODAY = new Date('2026-10-30T00:00:00');
+const TODAY = new Date('2026-10-31T00:00:00');
 let edits = {}, custom = [], q = '', onlyUs = false, onlyLate = false, stageFilter = null, armed = null;
 
 function load(){
@@ -464,7 +467,7 @@ function board(){
 
 function render(){
   document.getElementById('asof').textContent =
-    `${visible().length} of ${allJobs().length} jobs shown · board seeded 30 Oct 2026`;
+    `${visible().length} of ${allJobs().length} jobs shown · board seeded 31 Oct 2026`;
   pipeline(); board();
 }
 
