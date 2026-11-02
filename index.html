@@ -152,7 +152,7 @@ footer p{margin:0 0 7px}
   <footer>
     <p><b>Square metres start blank on purpose.</b> Those figures live in the part-list and PO attachments, not in the email text. Fill each one from Arvind's part list and the totals across the top will add up.</p>
     <p>Everything you type is saved in this browser only. Opening the board on another device starts from the same job list with empty figures.</p>
-    <p>Job list is from the info@ductline.in mailbox as of 31 October 2026. Ask Claude to refresh it when new POs and approvals land.</p>
+    <p>Job list is from the info@ductline.in mailbox as of 2 November 2026. Ask Claude to refresh it when new POs and approvals land.</p>
   </footer>
 </div>
 
@@ -166,7 +166,7 @@ const STAGES = [
 ];
 const SK = Object.fromEntries(STAGES.map(s => [s.k, s]));
 
-// Refreshed from the mailbox on 31 Oct 2026. `since` = date that stage was last confirmed by email.
+// Refreshed from the mailbox on 2 Nov 2026. `since` = date that stage was last confirmed by email.
 const JOBS = [
   {id:'tap-candeur', stage:'ready', since:'2026-10-15', project:'Candeur Twins pressurisation', client:'TAP Engineering', ref:'PO 22978',
    detail:'PO 22978 received 15 Oct against the part list approved 13 Oct. Acknowledgment due in a day; we asked TAP to add 20G TDF price.', th:'1a13f22b927b2bed'},
@@ -326,12 +326,15 @@ const JOBS = [
   {id:'toot-amararaja-corridor', stage:'draw', since:'2026-10-31', project:'Amararaja E-Positive, 2nd and 3rd floor corridor flat oval', client:'Tootmnetech', ref:'PO 356(115)/H414',
    detail:'Corridor flat oval ducting for the 2nd and 3rd floors sent for production 31 Oct; Tootmnetech want the numbering drawing and measurement sheet for approval.', th:'1a12027ffba77474'},
 
+  {id:'gmp-adpctrls', stage:'draw', since:'2026-11-02', project:'ADP requirement, CtrlS Hyderabad', client:'GMP Technical Solutions', ref:'—',
+   detail:'BOQ received 2 Nov for the CtrlS Hyderabad ADP requirement, with tender specs, asking our best offer plus TDS and freight inclusive till site.', th:'1a19bd53dbf4c41d'},
+
   {id:'comf-ssgi', stage:'ship', since:'2026-10-10', project:'RCPL Kurnool, SS and GI duct', client:'Comfonomics', ref:'PO 19 Aug',
    detail:'Balance payment received 10 Oct. Job is fully paid, so close out the delivery.', th:'1a01a1786bb9bf3b'},
 ];
 
 const LS = 'ductline-prod-board-v1';
-const TODAY = new Date('2026-10-31T00:00:00');
+const TODAY = new Date('2026-11-02T00:00:00');
 let edits = {}, custom = [], q = '', onlyUs = false, onlyLate = false, stageFilter = null, armed = null;
 
 function load(){
@@ -467,7 +470,7 @@ function board(){
 
 function render(){
   document.getElementById('asof').textContent =
-    `${visible().length} of ${allJobs().length} jobs shown · board seeded 31 Oct 2026`;
+    `${visible().length} of ${allJobs().length} jobs shown · board seeded 2 Nov 2026`;
   pipeline(); board();
 }
 
